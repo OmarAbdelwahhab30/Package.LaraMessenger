@@ -1,0 +1,24 @@
+{
+    "name": "omarabdulwahhab/laramessenger",
+    "description": "A simple package for you to implement a chat in your application without effort !",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Omarabdulwahhab\\Laramessenger\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "omarAbdulwahhab",
+            "email": "omarabdelwahhabkishk2000@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Omarabdulwahhab\\Laramessenger\\ServiceProviders\\LaraServiceProvider"
+            ]
+        }
+    },
+    "require": {}
+}
