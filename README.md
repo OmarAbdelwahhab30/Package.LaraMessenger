@@ -72,6 +72,8 @@ Here you will find how to use this simple package , follow me:
               ->setReceiverID($request->receiver_id)
               ->setMessageType($request->type) // Make sure to set a type to one of them ['file','text','voice']
               ->setMessage($request->message)
+    // or     ->setMessage($request->file('file'))
+    // or     ->setMessage($request->file('voice'))
               ->build();
           /*HERE YOU HAVE TO OPTIONS*/
           // 1- $config->broadcast();
