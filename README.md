@@ -1,11 +1,10 @@
 # Lara-Messenger
 
 
-
+![MarkDown](https://img.shields.io/badge/Made%20with-Markdown-1f425f.svg)
+![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![ask me](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Latest Release](https://img.shields.io/github/v/release/your_username/your_package_name.svg)](https://github.com/your_username/your_package_name/releases)
-[![Build Status](https://travis-ci.org/your_username/your_package_name.svg?branch=master)](https://travis-ci.org/your_username/your_package_name)
-[![PHP Versions](https://img.shields.io/packagist/php-v/your_username/your_package_name)](https://packagist.org/packages/your_username/your_package_name)
 
 > A simple package for you to implement a chat in your application without effort !
 
