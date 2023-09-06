@@ -64,8 +64,8 @@ That's it! You've successfully installed LaraMessenger and set up the necessary 
 
 ## Usage
 
-# Firstly : Sending The Message ...
-  Here you will find how to use this simple package , follow me:
+# Firstly : Sending The Message 
+Here you will find how to use this simple package , follow me:
   • The code to send a message is very simple :
   ```
     $config = LaraMessenger::builder()
@@ -80,7 +80,7 @@ That's it! You've successfully installed LaraMessenger and set up the necessary 
           // 2- $config->send();
   ```
 
-  ## Option 1: Send a message with broadcasting (pusher and save the message in the database.)
+  ## Option 1: Send a message with broadcasting (pusher) then save the message in the database.
 
   You can use broadcasting with pusher in the package but make sure to integrate with pusher , [read this doc section](https://laravel.com/docs/10.x/broadcasting#pusher-channels)
   ```
@@ -100,19 +100,19 @@ That's it! You've successfully installed LaraMessenger and set up the necessary 
 
   ## Option 1: Load the chat by chatID
   ```
-    ChatLoader::LoadChatByChatID($ChatID);
+    return ChatLoader::LoadChatByChatID($ChatID);
   ```
 
  ## Option 2: Load the chat by UsersIDs
   ```
-    ChatLoader::LoadChatByUsersID($SenderID,$ReceiverID);
+    return ChatLoader::LoadChatByUsersID($SenderID,$ReceiverID);
   ```
 
 ## Option 3: Load the chat by Scrolling
 This function will return the chat with the latest message ID to store it and send it again with next request and so on   
     
   ```
-    ChatLoader::LoadChatByScrolling($latestMessageID,$SenderID,$ReceiverID,$NoOfMessagesPerPage);
+    return ChatLoader::LoadChatByScrolling($latestMessageID,$SenderID,$ReceiverID,$NoOfMessagesPerPage);
   ```
 
 Finally I have published the model , migrations and events files to your project ,In case you may like to customize them.
