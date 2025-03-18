@@ -9,34 +9,35 @@ use App\Models\Message;
 
 class TextMessageService implements MessageType
 {
-    public function handle($SenderID,$ReceiverID,$TextMessage)
+    public function handle($SenderID, $ReceiverID, $TextMessage)
     {
-        $this->Prepare($SenderID,$ReceiverID,$TextMessage);
+        return $this->Prepare($SenderID, $ReceiverID, $TextMessage);
     }
 
-    private function Prepare($SenderID,$ReceiverID,$TextMessage)
+    private function Prepare($SenderID, $ReceiverID, $TextMessage)
     {
-        $ChatID = ChatService::PrepareChat($SenderID,$ReceiverID);
-            self::SaveMessageToDB(
-                $ChatID,
-                $SenderID,
-                $ReceiverID,
-                $TextMessage
-            );
+        $ChatID = ChatService::PrepareChat($SenderID, $ReceiverID);
+        return self::SaveMessageToDB(
+            $ChatID,
+            $SenderID,
+            $ReceiverID,
+            $TextMessage
+        );
     }
-    private static function SaveMessageToDB($ChatID, $SenderID, $ReceiverID ,$TextMessage = null)
+
+    private static function SaveMessageToDB($ChatID, $SenderID, $ReceiverID, $TextMessage = null)
     {
         return Message::create([
 
             'from_user' => $SenderID,
 
-            'to_user'   => $ReceiverID,
+            'to_user' => $ReceiverID,
 
-            'content'   => $TextMessage,
+            'content' => $TextMessage,
 
-            'type'      => "text",
+            'type' => "text",
 
-            'chat_id'   => $ChatID,
+            'chat_id' => $ChatID,
         ]);
     }
 }

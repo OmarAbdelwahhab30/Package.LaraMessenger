@@ -11,20 +11,22 @@ class TextMessageService implements MessageType
 {
     public function handle($SenderID,$ReceiverID,$TextMessage)
     {
-        $this->Prepare($SenderID,$ReceiverID,$TextMessage);
+        return $this->Prepare($SenderID,$ReceiverID,$TextMessage);
     }
 
-    public function Prepare($SenderID,$ReceiverID,$TextMessage)
+    private function Prepare($SenderID,$ReceiverID,$TextMessage)
     {
         $ChatID = ChatService::PrepareChat($SenderID,$ReceiverID);
-        broadcast(new SendMessageEvent(
-            self::SaveMessageToDB(
-                $ChatID,
-                $SenderID,
-                $ReceiverID,
-                $TextMessage
-            )
-        ))->toOthers();
+
+        $message = self::SaveMessageToDB(
+            $ChatID,
+            $SenderID,
+            $ReceiverID,
+            $TextMessage
+        );
+
+        broadcast(new SendMessageEvent($message))->toOthers();
+        return $message;
     }
     private static function SaveMessageToDB($ChatID, $SenderID, $ReceiverID ,$TextMessage = null)
     {
