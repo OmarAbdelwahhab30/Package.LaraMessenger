@@ -13,20 +13,20 @@ class VoiceMessageService implements MessageType
 
     public function handle($SenderID,$ReceiverID,$voice)
     {
-        $this->Prepare($SenderID,$ReceiverID,$voice);
+        return $this->Prepare($SenderID,$ReceiverID,$voice);
     }
 
     private function Prepare($SenderID,$ReceiverID,$voice)
     {
         $ChatID = ChatService::PrepareChat($SenderID,$ReceiverID);
-        broadcast(new SendMessageEvent(
-            self::SaveMessageToDB(
-                $ChatID,
-                $SenderID,
-                $ReceiverID,
-                $voice
-            )
-        ))->toOthers();
+        $message = self::SaveMessageToDB(
+            $ChatID,
+            $SenderID,
+            $ReceiverID,
+            $voice
+        );
+        broadcast(new SendMessageEvent($message))->toOthers();
+        return $message;
     }
     private static function SaveMessageToDB($ChatID, $SenderID, $ReceiverID ,$voice)
     {

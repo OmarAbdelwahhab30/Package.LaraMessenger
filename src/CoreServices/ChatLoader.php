@@ -9,57 +9,78 @@ use App\Models\Message;
 class ChatLoader implements Loader
 {
 
-    public static function LoadChatByUsersID($FirstUserID,$SecondUserID)
+    public static function LoadChatByUsersID($FirstUserID, $SecondUserID, $sort = 'DESC')
     {
         try {
-            return Message::where(function ($query) use ($FirstUserID,$SecondUserID) {
+            return Message::where(function ($query) use ($FirstUserID, $SecondUserID) {
                 $query->where('from_user', $FirstUserID)->where('to_user', $SecondUserID);
-            })->orWhere(function ($query) use ($FirstUserID,$SecondUserID) {
-                $query->where('from_user', $FirstUserID)->where('to_user',$SecondUserID);
-            })->orderBy('created_at', 'ASC')->get();
-        }catch (\Exception $exception){
+            })->orWhere(function ($query) use ($FirstUserID, $SecondUserID) {
+                $query->where('from_user', $SecondUserID)->where('to_user', $FirstUserID);
+            })->orderBy('created_at', $sort)->get();
+        } catch (\Exception $exception) {
             return response()->json([
                 "status" => $exception->getCode(),
-                "message"   => $exception->getMessage(),
+                "message" => $exception->getMessage(),
             ]);
         }
     }
 
-    public static function LoadChatByChatID($chat_id)
+    public static function LoadChatByChatID($chat_id,$sort = 'DESC')
     {
         try {
-            return Chat::where("id", $chat_id)->with(["messages" => function ($q) use ($chat_id) {
-                $q->where("messages.chat_id",$chat_id)->orderBy("id", "asc");
+            return Chat::where("id", $chat_id)->with(["messages" => function ($q) use ($chat_id,$sort) {
+                $q->where("messages.chat_id", $chat_id)->orderBy("id", $sort);
             }])->get();
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return response()->json([
                 "status" => $exception->getCode(),
-                "message"   => $exception->getMessage(),
+                "message" => $exception->getMessage(),
             ]);
         }
     }
 
-    public static function LoadChatByScrolling($LatestMessageID,$FirstUserID,$SecondUserID,$no_messages = null)
+    public static function LoadChatByScrolling($FirstUserID, $SecondUserID, $LatestMessageID = null, $no_messages = null)
     {
         try {
-            $no_messages = $no_messages == null ? 10:$no_messages;
-            $message = Message::find($LatestMessageID);
-            $messages['Messages'] =  Message::where(function ($query) use ($FirstUserID,$SecondUserID,$message) {
-                $query->where('from_user',$FirstUserID)
+
+            $no_messages = $no_messages == null ? 10 : $no_messages;
+
+            $message = $LatestMessageID == null
+                ? Message::latest()->select('created_at')->first()
+                : Message::where('id', $LatestMessageID)->select('created_at')->first();
+
+            $operator = (
+                $LatestMessageID == null
+                or
+                Message::latest()->first()->id == $LatestMessageID
+            )
+                ? '<=' : '<';
+
+            $messages['Messages'] = Message::where(function ($query) use ($FirstUserID, $SecondUserID, $message, $operator) {
+
+                $query->where('from_user', $FirstUserID)
                     ->where('to_user', $SecondUserID)
-                    ->where('created_at', '>', $message->created_at);
-            })->orWhere(function ($query) use ($FirstUserID,$SecondUserID, $message) {
+                    ->where('created_at', $operator, $message->created_at);
+
+            })->orWhere(function ($query) use ($FirstUserID, $SecondUserID, $message, $operator) {
+
                 $query->where('from_user', $SecondUserID)
                     ->where('to_user', $FirstUserID)
-                    ->where('created_at', '>', $message->created_at);
-            })->orderBy('created_at', 'ASC')->limit($no_messages)->get();
+                    ->where('created_at', $operator, $message->created_at);
+
+            })->orderBy('created_at', 'DESC')->limit($no_messages)->get();
+
             $messages['LatestMessageID'] = $messages['Messages'][$no_messages - 1]['id'] ?? null;
+
             return $messages;
-        }catch (\Exception $exception){
+
+        } catch (\Exception $exception) {
             return response()->json([
                 "status" => $exception->getCode(),
-                "message"   => $exception->getMessage(),
-                ]);
+                "message" => $exception->getMessage(),
+            ]);
         }
     }
+
+
 }

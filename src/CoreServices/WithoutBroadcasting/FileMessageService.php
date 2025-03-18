@@ -13,18 +13,19 @@ class FileMessageService implements MessageType
 {
     public function handle($SenderID,$ReceiverID,$File)
     {
-        $this->Prepare($SenderID,$ReceiverID,$File);
+        return $this->Prepare($SenderID,$ReceiverID,$File);
     }
 
     private function Prepare($SenderID,$ReceiverID,$File)
     {
         $ChatID = ChatService::PrepareChat($SenderID,$ReceiverID);
-            self::SaveMessageToDB(
+            return self::SaveMessageToDB(
                 $ChatID,
                 $SenderID,
                 $ReceiverID,
                 $File
             );
+            
     }
     private static function SaveMessageToDB($ChatID, $SenderID, $ReceiverID ,$File)
     {

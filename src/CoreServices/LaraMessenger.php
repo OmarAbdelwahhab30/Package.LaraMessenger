@@ -39,6 +39,7 @@ class LaraMessenger
     {
         return new LaraMessenger();
     }
+
     public function setSenderID($senderID): LaraMessenger
     {
         $this->SenderID = $senderID;
@@ -72,11 +73,11 @@ class LaraMessenger
     {
         try {
             $CLASSNAME = 'Omarabdulwahhab\\Laramessenger\\CoreServices\\WithBroadcasting\\' . $this->type . 'MessageService';
-            return (new $CLASSNAME)->handle($this->SenderID,$this->ReceiverID,$this->message);
-        }catch (\Exception $exception){
+            return (new $CLASSNAME)->handle($this->SenderID, $this->ReceiverID, $this->message);
+        } catch (\Exception $exception) {
             return response()->json([
                 "status" => $exception->getCode(),
-                "message"   => $exception->getMessage(),
+                "message" => $exception->getMessage(),
             ]);
         }
     }
@@ -85,12 +86,13 @@ class LaraMessenger
     {
         try {
             $CLASSNAME = 'Omarabdulwahhab\\Laramessenger\\CoreServices\\WithoutBroadcasting\\' . $this->type . 'MessageService';
-            (new $CLASSNAME)->handle($this->SenderID,$this->ReceiverID,$this->message);
-        }catch (\Exception $exception){
+            return (new $CLASSNAME)->handle($this->SenderID, $this->ReceiverID, $this->message);
+        } catch (\Exception $exception) {
             return response()->json([
                 "status" => $exception->getCode(),
-                "message"   => $exception->getMessage(),
+                "message" => $exception->getMessage(),
             ]);
         }
     }
+    
 }
