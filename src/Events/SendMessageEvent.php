@@ -14,7 +14,7 @@ class SendMessageEvent implements ShouldBroadcastNow
 
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    private $message;
+    public $message;
 
 
     public function __construct(Message $message)
@@ -24,7 +24,7 @@ class SendMessageEvent implements ShouldBroadcastNow
 
     public function broadcastOn(): PrivateChannel
     {
-        
+
         return new PrivateChannel('chat.'.$this->message['chat_id']);
     }
 
