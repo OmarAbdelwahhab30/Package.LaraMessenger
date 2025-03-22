@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Events\SendMessageEvent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Event;
+use Mockery\Mock;
 use Omarabdulwahhab\Laramessenger\CoreServices\LaraMessenger;
 use Tests\TestCase;
 
@@ -112,6 +115,8 @@ class SendingMessagesTest extends TestCase
 
     public function test_sending_text_With_broadcasting(): void
     {
+        Event::fake();
+
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
 
@@ -124,6 +129,9 @@ class SendingMessagesTest extends TestCase
 
         $message = $config->broadcast();
 
+        Event::assertDispatched(SendMessageEvent::class, function ($e) use ($message) {
+            return $e->message->id === $message->id;
+        });
 
         $this->assertDatabaseHas('messages', Arr::except($message->toArray(), ['created_at', 'updated_at']));
 
@@ -136,6 +144,8 @@ class SendingMessagesTest extends TestCase
 
     public function test_sending_file_With_broadcasting(): void
     {
+        Event::fake();
+
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
 
@@ -149,6 +159,10 @@ class SendingMessagesTest extends TestCase
             ->build();
 
         $message = $config->broadcast();
+
+        Event::assertDispatched(SendMessageEvent::class, function ($e) use ($message) {
+            return $e->message->id === $message->id;
+        });
 
         $file = str_replace([asset("storage/"), '/', '\\'], '', $message->content);
         $this->assertDatabaseHas('messages', [
@@ -172,6 +186,8 @@ class SendingMessagesTest extends TestCase
 
     public function test_sending_voice_With_broadcasting(): void
     {
+        Event::fake();
+
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
 
@@ -185,6 +201,10 @@ class SendingMessagesTest extends TestCase
             ->build();
 
         $message = $config->broadcast();
+
+        Event::assertDispatched(SendMessageEvent::class, function ($e) use ($message) {
+            return $e->message->id === $message->id;
+        });
 
         $file = str_replace([asset("storage/"), '/', '\\'], '', $message->content);
 
