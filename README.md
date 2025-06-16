@@ -88,7 +88,7 @@ You can use broadcasting with pusher in the package but make sure to integrate w
     $config->broadcast()
   ```
 
-## Option 1: Send a message without broadcasting (just save the message in the database.)
+## Option 2: Send a message without broadcasting (just save the message in the database.)
 
   ```
   $config->send()
